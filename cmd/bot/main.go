@@ -1,5 +1,9 @@
 package main
 
-func main() {
+import (
+	"discord/config"
+)
 
+func main() {
+	config.Load()
 }
