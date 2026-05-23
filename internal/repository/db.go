@@ -33,5 +33,4 @@ func Initialize() {
 	}
 
 	DB.AutoMigrate(&model)
-
 }
