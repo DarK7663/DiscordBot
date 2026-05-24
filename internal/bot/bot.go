@@ -3,6 +3,9 @@ package bot
 import (
 	"discord/config"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -28,4 +31,21 @@ func New(cfg *config.Config) (*Bot, error) {
 	}
 
 	return bot, nil
+}
+
+func (b *Bot) Start() error {
+	if err := b.Session.Open(); err != nil {
+		return fmt.Errorf("Start func error: %w", err)
+	}
+	fmt.Println("Bot started")
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+
+	<-stop
+	fmt.Println("Bot stopped")
+
+	b.Session.Close()
+
+	return nil
 }
