@@ -2,6 +2,7 @@ package bot
 
 import (
 	"discord/config"
+	"discord/internal/handlers"
 	"fmt"
 	"os"
 	"os/signal"
@@ -29,6 +30,7 @@ func New(cfg *config.Config) (*Bot, error) {
 		Session: session,
 		Config:  cfg,
 	}
+	bot.Session.AddHandler(handlers.ReadyHandler)
 
 	return bot, nil
 }
