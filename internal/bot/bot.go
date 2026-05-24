@@ -9,14 +9,16 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"gorm.io/gorm"
 )
 
 type Bot struct {
 	Session *discordgo.Session
 	Config  *config.Config
+	DB      *gorm.DB
 }
 
-func New(cfg *config.Config) (*Bot, error) {
+func New(cfg *config.Config, db *gorm.DB) (*Bot, error) {
 	session, err := discordgo.New("Bot " + cfg.DiscordToken)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка создания сессии: %w", err)
@@ -29,6 +31,7 @@ func New(cfg *config.Config) (*Bot, error) {
 	var bot = &Bot{
 		Session: session,
 		Config:  cfg,
+		DB:      db,
 	}
 	bot.Session.AddHandler(handlers.ReadyHandler)
 	bot.Session.AddHandler(handlers.MessageHandler(cfg.CommandPrefix))

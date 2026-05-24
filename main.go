@@ -12,8 +12,13 @@ func main() {
 	if err != nil {
 		log.Fatal("Config error:", err)
 	}
-	db.Connect(cfg)
-	b, err := bot.New(cfg)
+
+	database, err := db.Connect()
+	if err != nil {
+		log.Fatal("DB error:", err)
+	}
+
+	b, err := bot.New(cfg, database)
 	if err != nil {
 		log.Fatal("Bot error:", err)
 	}

@@ -1,17 +1,15 @@
 package db
 
 import (
-	"discord/config"
+	"discord/internal/database/models"
 	"fmt"
-	"log"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func Connect(cfg *config.Config) (*gorm.DB, error) {
-	var err error
+func Connect() (*gorm.DB, error) {
 
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
@@ -25,9 +23,11 @@ func Connect(cfg *config.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database: ", err)
+		return nil, fmt.Errorf("Error connect to BD:%w", err)
 	}
-	db.AutoMigrate()
+	fmt.Println("DB connected")
+
+	db.AutoMigrate(&models.User{})
 
 	return db, nil
 }
