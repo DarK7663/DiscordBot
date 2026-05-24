@@ -3,6 +3,7 @@ package main
 import (
 	"discord/config"
 	"discord/internal/bot"
+	db "discord/internal/database"
 	"log"
 )
 
@@ -11,6 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Config error:", err)
 	}
+	db.Connect(cfg)
 	b, err := bot.New(cfg)
 	if err != nil {
 		log.Fatal("Bot error:", err)
