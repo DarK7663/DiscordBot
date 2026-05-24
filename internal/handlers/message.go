@@ -17,11 +17,12 @@ func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *di
 			return
 		}
 
+		if err := repo.IncrementMessages(m.Author.ID); err != nil {
+			log.Printf("Failed to increment message count: %v", err)
+		}
+
 		content := strings.TrimSpace(m.Content)
 		if !strings.HasPrefix(content, prefix) {
-			if err := repo.IncrementMessages(m.Author.ID); err != nil {
-				log.Printf("Failed to increment message count: %v", err)
-			}
 			return
 		}
 
@@ -49,7 +50,7 @@ func handlerPing(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handlerHelp(s *discordgo.Session, m *discordgo.MessageCreate, prefix string) {
-	text := fmt.Sprintf("Список команд:\n"+"`%sping` - проверить бота\n"+"`%shelp` - список команд", prefix, prefix)
+	text := fmt.Sprintf("Список команд:\n"+"`%sping` - проверить бота\n"+"`%shelp` - список команд\n"+"`%sinfo`"+" - Информация сервера\n"+"`%sprofile`"+" - Профиль", prefix, prefix, prefix, prefix)
 	s.ChannelMessageSend(m.ChannelID, text)
 }
 
