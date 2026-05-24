@@ -31,6 +31,7 @@ func New(cfg *config.Config) (*Bot, error) {
 		Config:  cfg,
 	}
 	bot.Session.AddHandler(handlers.ReadyHandler)
+	bot.Session.AddHandler(handlers.MessageHandler(cfg.CommandPrefix))
 
 	return bot, nil
 }

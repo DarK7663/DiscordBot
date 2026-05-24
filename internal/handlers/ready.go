@@ -9,5 +9,5 @@ import (
 func ReadyHandler(s *discordgo.Session, r *discordgo.Ready) {
 	fmt.Println("Bot name:", r.User.Username)
 
-	s.UpdateGameStatus(0, "!help")
+	s.UpdateCustomStatus("Worker bot")
 }
