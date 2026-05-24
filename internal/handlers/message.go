@@ -1,31 +1,39 @@
 package handlers
 
 import (
+	"discord/internal/repository"
 	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"gorm.io/gorm"
 )
 
-func MessageHandler(prefix string) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {
 			return
 		}
 
-		args := strings.Fields(m.Content)
+		if !strings.HasPrefix(m.Content, prefix) {
+			return
+		}
+
+		args := strings.Fields(strings.TrimPrefix(m.Content, prefix))
 		if len(args) == 0 {
 			return
 		}
 		command := strings.ToLower(args[0])
 
 		switch command {
-		case "!ping":
+		case "ping":
 			handlerPing(s, m)
-		case "!help":
+		case "help":
 			handlerHelp(s, m, prefix)
-		case "!info":
+		case "info":
 			handlerInfo(s, m)
+		case "profile":
+			handlerProfile(s, m, db)
 		}
 	}
 }
@@ -50,4 +58,17 @@ func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 	info := fmt.Sprintf("Guild Name:"+"`%s`\n"+"Guild members:"+"`%d`", guild.Name, guild.MemberCount)
 
 	s.ChannelMessageSend(m.ChannelID, info)
+}
+
+func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
+	repo := repository.NewUserRepository(db)
+
+	user, err := repo.FindCreate(m.Author.ID, m.Author.Username)
+	if err != nil {
+		s.ChannelMessageSend(m.ChannelID, "Error get data")
+		return
+	}
+	text := fmt.Sprintf("Author ID:"+"`%s`\n"+"Author Name:"+"`%s\n`"+"Messages user:"+"`%d`", user.DiscordID, user.Username, user.Messages)
+
+	s.ChannelMessageSend(m.ChannelID, text)
 }

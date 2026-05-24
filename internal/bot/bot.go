@@ -34,7 +34,7 @@ func New(cfg *config.Config, db *gorm.DB) (*Bot, error) {
 		DB:      db,
 	}
 	bot.Session.AddHandler(handlers.ReadyHandler)
-	bot.Session.AddHandler(handlers.MessageHandler(cfg.CommandPrefix))
+	bot.Session.AddHandler(handlers.MessageHandler(cfg.CommandPrefix, db))
 
 	return bot, nil
 }
