@@ -3,6 +3,7 @@ package handlers
 import (
 	"discord/internal/repository"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -11,11 +12,16 @@ import (
 
 func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		repo := repository.NewUserRepository(db)
 		if m.Author.Bot {
 			return
 		}
 
-		if !strings.HasPrefix(m.Content, prefix) {
+		content := strings.TrimSpace(m.Content)
+		if !strings.HasPrefix(content, prefix) {
+			if err := repo.IncrementMessages(m.Author.ID); err != nil {
+				log.Printf("Failed to increment message count: %v", err)
+			}
 			return
 		}
 
@@ -62,7 +68,6 @@ func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
 	repo := repository.NewUserRepository(db)
-
 	user, err := repo.FindCreate(m.Author.ID, m.Author.Username)
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, "Error get data")
