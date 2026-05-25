@@ -22,6 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Bot error:", err)
 	}
+
 	if err := b.Start(); err != nil {
 		log.Fatal("Start error:", err)
 	}
