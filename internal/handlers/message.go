@@ -1,17 +1,12 @@
 package handlers
 
 import (
-	db "discord/internal/database"
-	"discord/internal/repository"
-
 	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"gorm.io/gorm"
 )
-
-var repo = repository.NewUserRepository(db.DB)
 
 func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 

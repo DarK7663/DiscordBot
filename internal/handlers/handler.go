@@ -1,11 +1,15 @@
 package handlers
 
 import (
+	db "discord/internal/database"
+	"discord/internal/repository"
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 	"gorm.io/gorm"
 )
+
+var repo = repository.NewUserRepository(db.DB)
 
 func handlerPing(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, "Яйца жаренные именно")
