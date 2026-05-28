@@ -12,7 +12,7 @@ import (
 
 func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		repo := repository.NewUserRepository(db)
+		repo := repository.NewUserRepository(db) // хуйня
 		if m.Author.Bot {
 			return
 		}
@@ -68,7 +68,7 @@ func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
-	repo := repository.NewUserRepository(db)
+	repo := repository.NewUserRepository(db) // хуйня
 	user, err := repo.FindCreate(m.Author.ID, m.Author.Username)
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, "Error get data")
@@ -77,4 +77,8 @@ func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.D
 	text := fmt.Sprintf("Author ID:"+"`%s`\n"+"Author Name:"+"`%s\n`"+"Messages user:"+"`%d`", user.DiscordID, user.Username, user.Messages)
 
 	s.ChannelMessageSend(m.ChannelID, text)
+}
+
+func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
+
 }
