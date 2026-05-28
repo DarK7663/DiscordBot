@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	db "discord/internal/database"
 	"discord/internal/repository"
 	"fmt"
 	"log"
@@ -10,9 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
+var repo = repository.NewUserRepository(db.DB)
+
 func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		repo := repository.NewUserRepository(db) // хуйня
 		if m.Author.Bot {
 			return
 		}
@@ -68,7 +71,6 @@ func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
-	repo := repository.NewUserRepository(db) // хуйня
 	user, err := repo.FindCreate(m.Author.ID, m.Author.Username)
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, "Error get data")

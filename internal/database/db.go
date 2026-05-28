@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func Connect() (*gorm.DB, error) {
 
 	dbUser := os.Getenv("DB_USER")
@@ -21,15 +23,15 @@ func Connect() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		dbHost, dbUser, dbPassword, dbName, dbPort, sslMode)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("Error connect to BD:%w", err)
 	}
 	fmt.Println("DB connected")
 
-	if err := db.AutoMigrate(&models.User{}); err != nil {
+	if err := DB.AutoMigrate(&models.User{}); err != nil {
 		return nil, fmt.Errorf("Error migrate db:%w", err)
 	}
 
-	return db, nil
+	return DB, nil
 }
