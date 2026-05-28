@@ -35,6 +35,7 @@ func New(cfg *config.Config, db *gorm.DB) (*Bot, error) {
 	}
 	bot.Session.AddHandler(handlers.ReadyHandler)
 	bot.Session.AddHandler(handlers.MessageHandler(cfg.CommandPrefix, db))
+	bot.Session.AddHandler(handlers.InteractionHandler(s*discordgo.Session, i*discordgo.InteractionCreate))
 
 	return bot, nil
 }
