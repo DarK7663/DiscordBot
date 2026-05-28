@@ -4,7 +4,6 @@ import (
 	db "discord/internal/database"
 	"discord/internal/repository"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -20,8 +19,13 @@ func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *di
 			return
 		}
 
+		if _, err := repo.FindCreate(m.Author.ID, m.Author.Username); err != nil {
+			fmt.Printf("User not found in DB")
+			return
+		}
 		if err := repo.IncrementMessages(m.Author.ID); err != nil {
-			log.Printf("Failed to increment message count: %v", err)
+			fmt.Printf("Failed to increment message count: %v", err)
+			return
 		}
 
 		content := strings.TrimSpace(m.Content)
