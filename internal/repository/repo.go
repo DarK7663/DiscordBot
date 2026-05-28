@@ -24,6 +24,16 @@ func (r *UserRepository) FindCreate(discordID, username string) (*models.User, e
 		DiscordID: discordID,
 		Username:  username,
 	})
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if user.Username != username {
+		r.DB.Model(user).Update("username", username)
+		user.Username = username
+	}
+
 	return user, result.Error
 }
 
