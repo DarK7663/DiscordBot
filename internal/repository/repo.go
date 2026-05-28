@@ -20,7 +20,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 func (r *UserRepository) FindCreate(discordID, username string) (*models.User, error) {
 	user := &models.User{}
 
-	result := r.DB.FirstOrCreate(user, models.User{
+	result := r.DB.Where("discord_id = ?", discordID).FirstOrCreate(user, models.User{
 		DiscordID: discordID,
 		Username:  username,
 	})
