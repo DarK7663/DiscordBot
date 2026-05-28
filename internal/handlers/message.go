@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"discord/internal/repository"
 	"fmt"
 	"strings"
 
@@ -9,6 +10,7 @@ import (
 )
 
 func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+	repo := repository.NewUserRepository(db)
 
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Author.Bot {

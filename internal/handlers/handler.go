@@ -1,15 +1,12 @@
 package handlers
 
 import (
-	db "discord/internal/database"
 	"discord/internal/repository"
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 	"gorm.io/gorm"
 )
-
-var repo = repository.NewUserRepository(db.DB)
 
 func handlerPing(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSend(m.ChannelID, "Яйца жаренные именно")
@@ -34,6 +31,8 @@ func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
+	repo := repository.NewUserRepository(db)
+
 	user, err := repo.FindCreate(m.Author.ID, m.Author.Username)
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, "Error get data")

@@ -27,10 +27,6 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Label:    "🕸️Operator",
 						Style:    discordgo.SecondaryButton,
 						CustomID: "role_operator",
-					}, discordgo.Button{
-						Label:    "🤪Council",
-						Style:    discordgo.PrimaryButton,
-						CustomID: "role_council",
 					},
 				},
 			},
