@@ -18,7 +18,7 @@ func handlerHelp(s *discordgo.Session, m *discordgo.MessageCreate, prefix string
 	embed := &discordgo.MessageEmbed{
 		Title:       "👨🏻‍🦯‍➡️ Навигация по командам",
 		Description: "Таблица префикс-команд",
-		Color:       0x008000,
+		Color:       0x00FF00,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name: "🤖 Команды",
