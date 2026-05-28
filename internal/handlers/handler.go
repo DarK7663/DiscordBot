@@ -14,21 +14,59 @@ func handlerPing(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func handlerHelp(s *discordgo.Session, m *discordgo.MessageCreate, prefix string) {
-	text := fmt.Sprintf("Список команд:\n"+"`%sping` - проверить бота\n"+"`%shelp` - список команд\n"+"`%sinfo`"+" - Информация сервера\n"+"`%sprofile`"+" - Профиль", prefix, prefix, prefix, prefix)
-	s.ChannelMessageSend(m.ChannelID, text)
+
+	embed := &discordgo.MessageEmbed{
+		Title:       "👨🏻‍🦯‍➡️ Навигация по командам",
+		Description: "Таблица префикс-команд",
+		Color:       0x008000,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name: "🤖 Команды",
+				Value: fmt.Sprintf(
+					"`%sping` — проверить бота\n"+
+						"`%shelp` — список команд\n"+
+						"`%sinfo` — информация о сервере\n"+
+						"`%sprofile` — твой профиль\n"+
+						"`%sroles` — выбор роли",
+					prefix, prefix, prefix, prefix, prefix,
+				),
+				Inline: false,
+			},
+		},
+	}
+
+	s.ChannelMessageSendEmbed(m.ChannelID, embed)
 }
 
 func handlerInfo(s *discordgo.Session, m *discordgo.MessageCreate) {
-	guild, err := s.Guild(m.GuildID)
+	guild, err := s.GuildWithCounts(m.GuildID)
 
 	if err != nil {
 		s.ChannelMessageSend(m.ChannelID, err.Error())
 		return
 	}
 
-	info := fmt.Sprintf("Guild Name:"+"`%s`\n"+"Guild members:"+"`%d`", guild.Name, guild.MemberCount)
-
-	s.ChannelMessageSend(m.ChannelID, info)
+	embed := &discordgo.MessageEmbed{
+		Title:       "👨🏼‍🦽‍➡️ " + guild.Name,
+		Description: "Информация о Сервере",
+		Color:       0x00CED1,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:   "🆔 Discord ID",
+				Value:  guild.ID,
+				Inline: true,
+			},
+			{
+				Name:   "🧑‍🧑‍🧒‍🧒 Members",
+				Value:  fmt.Sprintf("%d", guild.ApproximateMemberCount),
+				Inline: true,
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "Chugyn Bot",
+		},
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID, embed)
 }
 
 func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
@@ -39,9 +77,28 @@ func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.D
 		s.ChannelMessageSend(m.ChannelID, "Error get data")
 		return
 	}
-	text := fmt.Sprintf("Author ID:"+"`%s`\n"+"Author Name:"+"`%s\n`"+"Messages user:"+"`%d`", user.DiscordID, user.Username, user.Messages)
+	embed := &discordgo.MessageEmbed{
+		Title:       "👤 " + user.Username,
+		Description: "Информация о пользователе",
+		Color:       0x5865F2,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:   "🆔 Discord ID",
+				Value:  user.DiscordID,
+				Inline: true,
+			},
+			{
+				Name:   "💬 Сообщений",
+				Value:  fmt.Sprintf("%d", user.Messages),
+				Inline: true,
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "Chugyn Bot",
+		},
+	}
 
-	s.ChannelMessageSend(m.ChannelID, text)
+	s.ChannelMessageSendEmbed(m.ChannelID, embed)
 }
 
 func handlerSetupRoles(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {

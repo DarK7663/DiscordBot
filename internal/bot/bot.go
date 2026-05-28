@@ -26,7 +26,9 @@ func New(cfg *config.Config, db *gorm.DB) (*Bot, error) {
 
 	session.Identify.Intents = discordgo.IntentsGuilds |
 		discordgo.IntentsGuildMessages |
-		discordgo.IntentMessageContent | discordgo.IntentGuildMembers | discordgo.IntentsGuildMembers
+		discordgo.IntentMessageContent |
+		discordgo.IntentsGuildMembers |
+		discordgo.IntentsGuildPresences
 
 	var bot = &Bot{
 		Session: session,
