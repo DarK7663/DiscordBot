@@ -48,6 +48,8 @@ func MessageHandler(prefix string, db *gorm.DB) func(s *discordgo.Session, m *di
 			handlerProfile(s, m, db)
 		case "roles":
 			handlerRoles(s, m)
+		case "setuproles":
+			handlerSetupRoles(s, m, db)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"discord/internal/database/models"
 	"discord/internal/repository"
 	"fmt"
 
@@ -41,4 +42,44 @@ func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.D
 	text := fmt.Sprintf("Author ID:"+"`%s`\n"+"Author Name:"+"`%s\n`"+"Messages user:"+"`%d`", user.DiscordID, user.Username, user.Messages)
 
 	s.ChannelMessageSend(m.ChannelID, text)
+}
+
+func handlerSetupRoles(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
+	if m.Member.Permissions&discordgo.PermissionAdministrator == 0 {
+		s.ChannelMessageSend(m.ChannelID, "❌ Нет прав администратора")
+		return
+	}
+
+	roles := []models.SelfRole{
+		{
+			CustomID: "role_scientist",
+			RoleID:   "1506652453464965180",
+			Label:    "Scientist",
+			GuildID:  m.GuildID,
+		},
+		{
+			CustomID: "role_contributor",
+			RoleID:   "1506652734986911814",
+			Label:    "Scientist",
+			GuildID:  m.GuildID,
+		},
+		{
+			CustomID: "role_vibecoder",
+			RoleID:   "1507801691637022771",
+			Label:    "Scientist",
+			GuildID:  m.GuildID,
+		},
+		{
+			CustomID: "role_operator",
+			RoleID:   "1506652696135073893",
+			Label:    "Scientist",
+			GuildID:  m.GuildID,
+		},
+	}
+
+	if err := db.Create(&roles).Error; err != nil {
+		s.ChannelMessageSend(m.ChannelID, "❌ Ошибка записи ролей в БД")
+		return
+	}
+	s.ChannelMessageSend(m.ChannelID, "✅ Роли настроены!")
 }
