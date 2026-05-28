@@ -4,7 +4,7 @@ import "github.com/bwmarrin/discordgo"
 
 func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-		Content: "Выбери роль:",
+		Content: "Выберай роль чувачок :",
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{

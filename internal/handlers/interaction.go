@@ -1,46 +1,83 @@
 package handlers
 
 import (
+	"discord/internal/database/models"
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+	"gorm.io/gorm"
 )
 
-type RoleMap map[string]string
-
-func InteractionHandler(roles RoleMap) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func InteractionHandler(db *gorm.DB) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if i.Type != discordgo.InteractionMessageComponent {
 			return
 		}
 
 		customID := i.MessageComponentData().CustomID
+		guildID := i.GuildID
 
-		roleID, exists := roles[customID]
-		if exists {
-			err := handleRoleButton(s, i, roleID)
-			if err != nil {
-				fmt.Printf("Ошибка при обработке кнопки роли: %v\n", err)
+		var selfRole models.SelfRole
+		if err := db.Where("custom_id = ? AND guild_id = ?", customID, guildID).First(&selfRole).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: "Роль не найдена.",
+						Flags:   discordgo.MessageFlagsEphemeral,
+					},
+				})
+				return
 			}
+			fmt.Println("Error request SelfRole:", err)
 			return
 		}
 
-		fmt.Printf("Неизвестный CustomID кнопки: %s\n", customID)
+		err := handleRoleButton(s, i, db, &selfRole)
+		if err != nil {
+			fmt.Println("Ошибка toggle роли:", err)
+		}
 	}
 }
 
-func handleRoleButton(s *discordgo.Session, i *discordgo.InteractionCreate, roleID string) error {
-	memberID := i.Member.User.ID
+func handleRoleButton(s *discordgo.Session, i *discordgo.InteractionCreate, db *gorm.DB, selfRole *models.SelfRole) error {
+	userID := i.Member.User.ID
+	guildID := i.GuildID
+	roleID := selfRole.RoleID
 
-	err := s.GuildMemberRoleAdd(i.GuildID, memberID, roleID)
+	member, err := s.GuildMember(guildID, userID)
 	if err != nil {
 		return err
+	}
+
+	hasRole := false
+	for _, rID := range member.Roles {
+		if rID == roleID {
+			hasRole = true
+			break
+		}
+	}
+
+	var responseText string
+
+	if hasRole {
+		err = s.GuildMemberRoleRemove(guildID, userID, roleID)
+		if err != nil {
+			return err
+		}
+		responseText = "✅ Роль успешно **снята**!"
+	} else {
+		err = s.GuildMemberRoleAdd(guildID, userID, roleID)
+		if err != nil {
+			return err
+		}
+		responseText = "✅ Роль успешно **выдана**!"
 	}
 
 	return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: "Роль успешно выдана!",
+			Content: responseText,
 			Flags:   discordgo.MessageFlagsEphemeral,
 		},
 	})
