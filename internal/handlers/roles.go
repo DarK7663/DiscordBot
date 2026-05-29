@@ -28,7 +28,7 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 					{
 						Name:   "🕸️ Operator",
 						Value:  "Оператор системы",
-						Inline: true,
+						Inline: false,
 					},
 				},
 			},
