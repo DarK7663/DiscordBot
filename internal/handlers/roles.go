@@ -23,7 +23,7 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 					{
 						Name:   "🤡 Vibecoder",
 						Value:  "Вайб-кодер на максималках",
-						Inline: true,
+						Inline: false,
 					},
 					{
 						Name:   "🕸️ Operator",
@@ -37,22 +37,22 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						Label:    "🧪 Scientist",
+						Label:    "🧪",
 						Style:    discordgo.SuccessButton,
 						CustomID: "role_scientist",
 					},
 					discordgo.Button{
-						Label:    "🔧 Contributor",
+						Label:    "🔧",
 						Style:    discordgo.SecondaryButton,
 						CustomID: "role_contributor",
 					},
 					discordgo.Button{
-						Label:    "🤡 Vibecoder",
+						Label:    "🤡",
 						Style:    discordgo.DangerButton,
 						CustomID: "role_vibecoder",
 					},
 					discordgo.Button{
-						Label:    "🕸️ Operator",
+						Label:    "🕸️",
 						Style:    discordgo.SecondaryButton,
 						CustomID: "role_operator",
 					},
