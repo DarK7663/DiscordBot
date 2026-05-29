@@ -23,13 +23,16 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 					{
 						Name:   "🤡 Vibecoder",
 						Value:  "Вайб-кодер на максималках",
-						Inline: true,
+						Inline: false,
 					},
 					{
 						Name:   "🕸️ Operator",
 						Value:  "Оператор системы",
-						Inline: true,
+						Inline: false,
 					},
+				},
+				Footer: &discordgo.MessageEmbedFooter{
+					Text: "Chugyn Bot",
 				},
 			},
 		},
