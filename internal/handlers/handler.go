@@ -102,10 +102,6 @@ func handlerProfile(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.D
 }
 
 func handlerSetupRoles(s *discordgo.Session, m *discordgo.MessageCreate, db *gorm.DB) {
-	if m.Member.Permissions&discordgo.PermissionAdministrator == 0 {
-		s.ChannelMessageSend(m.ChannelID, "❌ Нет прав администратора")
-		return
-	}
 
 	roles := []models.SelfRole{
 		{
