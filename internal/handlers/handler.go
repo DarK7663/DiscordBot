@@ -27,8 +27,9 @@ func handlerHelp(s *discordgo.Session, m *discordgo.MessageCreate, prefix string
 						"`%shelp` — список команд\n"+
 						"`%sinfo` — информация о сервере\n"+
 						"`%sprofile` — твой профиль\n"+
-						"`%sroles` — выбор роли",
-					prefix, prefix, prefix, prefix, prefix,
+						"`%sroles` — выбор роли\n"+
+						"`%ssetuproles` — админ запонение",
+					prefix, prefix, prefix, prefix, prefix, prefix,
 				),
 				Inline: false,
 			},

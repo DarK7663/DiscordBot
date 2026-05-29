@@ -4,7 +4,35 @@ import "github.com/bwmarrin/discordgo"
 
 func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 	s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-		Content: "Выберай роль чувачок :",
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title:       "🧠 Роли",
+				Description: "Выбирай роль по стэку",
+				Color:       0x7f03fc,
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "🧪 Scientist",
+						Value:  "Исследователь и аналитик",
+						Inline: true,
+					},
+					{
+						Name:   "🔧 Contributor",
+						Value:  "Контрибьютор проекта",
+						Inline: true,
+					},
+					{
+						Name:   "🤡 Vibecoder",
+						Value:  "Вайб-кодер на максималках",
+						Inline: true,
+					},
+					{
+						Name:   "🕸️ Operator",
+						Value:  "Оператор системы",
+						Inline: true,
+					},
+				},
+			},
+		},
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
@@ -14,17 +42,17 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 						CustomID: "role_scientist",
 					},
 					discordgo.Button{
-						Label:    "🔧Contributor",
+						Label:    "🔧 Contributor",
 						Style:    discordgo.SecondaryButton,
 						CustomID: "role_contributor",
 					},
 					discordgo.Button{
-						Label:    "🤡Vibecoder",
+						Label:    "🤡 Vibecoder",
 						Style:    discordgo.DangerButton,
 						CustomID: "role_vibecoder",
 					},
 					discordgo.Button{
-						Label:    "🕸️Operator",
+						Label:    "🕸️ Operator",
 						Style:    discordgo.SecondaryButton,
 						CustomID: "role_operator",
 					},
