@@ -31,9 +31,6 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 						Inline: false,
 					},
 				},
-				Footer: &discordgo.MessageEmbedFooter{
-					Text: "Chugyn Bot",
-				},
 			},
 		},
 		Components: []discordgo.MessageComponent{
