@@ -7,7 +7,7 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Embeds: []*discordgo.MessageEmbed{
 			{
 				Title:       "🧠 Роли",
-				Description: "Выбирай роль по стэку",
+				Description: "Выбирай роль по стэку:",
 				Color:       0x7f03fc,
 				Fields: []*discordgo.MessageEmbedField{
 					{
