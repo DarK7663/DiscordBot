@@ -13,22 +13,22 @@ func handlerRoles(s *discordgo.Session, m *discordgo.MessageCreate) {
 					{
 						Name:   "🧪 Scientist",
 						Value:  "Исследователь и аналитик",
-						Inline: true,
+						Inline: false,
 					},
 					{
 						Name:   "🔧 Contributor",
 						Value:  "Контрибьютор проекта",
-						Inline: true,
+						Inline: false,
 					},
 					{
 						Name:   "🤡 Vibecoder",
 						Value:  "Вайб-кодер на максималках",
-						Inline: false,
+						Inline: true,
 					},
 					{
 						Name:   "🕸️ Operator",
 						Value:  "Оператор системы",
-						Inline: false,
+						Inline: true,
 					},
 				},
 			},
